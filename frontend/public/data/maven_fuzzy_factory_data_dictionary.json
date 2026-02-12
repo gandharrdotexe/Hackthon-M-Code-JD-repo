@@ -1,0 +1,182 @@
+[
+  {
+    "table": "orders",
+    "field": "order_id",
+    "description": "Unique identifier for each order (PK)"
+  },
+  {
+    "table": "orders",
+    "field": "created_at",
+    "description": "Timestamp when the order was placed"
+  },
+  {
+    "table": "orders",
+    "field": "website_session_id",
+    "description": "Unique identifier for the website session (FK)"
+  },
+  {
+    "table": "orders",
+    "field": "user_id",
+    "description": "Unique identifier for the user (FK)"
+  },
+  {
+    "table": "orders",
+    "field": "primary_product_id",
+    "description": "Unique identifier for the primary product in the order if part of a bundle (FK)"
+  },
+  {
+    "table": "orders",
+    "field": "items_purchased",
+    "description": "Number of items in the order"
+  },
+  {
+    "table": "orders",
+    "field": "price_usd",
+    "description": "Total price for the items in the order"
+  },
+  {
+    "table": "orders",
+    "field": "cogs_usd",
+    "description": "Cost of goods sold for the items in the order"
+  },
+  {
+    "table": "order_items",
+    "field": "order_item_id",
+    "description": "Unique identifier for each order item (PK)"
+  },
+  {
+    "table": "order_items",
+    "field": "created_at",
+    "description": "Timestamp when the order was placed"
+  },
+  {
+    "table": "order_items",
+    "field": "order_id",
+    "description": "Unique identifier for the order the item belongs to (FK)"
+  },
+  {
+    "table": "order_items",
+    "field": "product_id",
+    "description": "Unique identifier for the product (FK)"
+  },
+  {
+    "table": "order_items",
+    "field": "is_primary_item",
+    "description": "Binary flag with a value of 1 if it's the primary item in the order"
+  },
+  {
+    "table": "order_items",
+    "field": "price_usd",
+    "description": "Price of the product"
+  },
+  {
+    "table": "order_items",
+    "field": "cogs_usd",
+    "description": "Cost of goods sold of the product"
+  },
+  {
+    "table": "order_item_refunds",
+    "field": "order_item_refund_id",
+    "description": "Unique identifier for each refund (PK)"
+  },
+  {
+    "table": "order_item_refunds",
+    "field": "created_at",
+    "description": "Timestamp when the refund was issued"
+  },
+  {
+    "table": "order_item_refunds",
+    "field": "order_item_id",
+    "description": "Unique identifier for the order item that was refunded (FK)"
+  },
+  {
+    "table": "order_item_refunds",
+    "field": "order_id",
+    "description": "Unique identifier for the order the refunded item belonged to (FK)"
+  },
+  {
+    "table": "order_item_refunds",
+    "field": "refund_amount_usd",
+    "description": "Refund amount"
+  },
+  {
+    "table": "products",
+    "field": "product_id",
+    "description": "Unique identifier for the product (PK)"
+  },
+  {
+    "table": "products",
+    "field": "created_at",
+    "description": "Timestamp for when the product was launched"
+  },
+  {
+    "table": "products",
+    "field": "product_name",
+    "description": "Name of the product"
+  },
+  {
+    "table": "website_sessions",
+    "field": "website_session_id",
+    "description": "Unique identifier for the website session (PK)"
+  },
+  {
+    "table": "website_sessions",
+    "field": "created_at",
+    "description": "Timestamp when the session started"
+  },
+  {
+    "table": "website_sessions",
+    "field": "user_id",
+    "description": "Unique identifier for the user (FK)"
+  },
+  {
+    "table": "website_sessions",
+    "field": "is_repeat_session",
+    "description": "Binary flag with a value of 1 if the user has had a previous ression"
+  },
+  {
+    "table": "website_sessions",
+    "field": "utm_source",
+    "description": "UTM source parameter (traffic origin)"
+  },
+  {
+    "table": "website_sessions",
+    "field": "utm_campaign",
+    "description": "UTM campaign parameter (marketing campaign name)"
+  },
+  {
+    "table": "website_sessions",
+    "field": "utm_content",
+    "description": "UTM content parameter (ad/content variant)"
+  },
+  {
+    "table": "website_sessions",
+    "field": "device_type",
+    "description": "Device category (mobile or desktop)"
+  },
+  {
+    "table": "website_sessions",
+    "field": "http_referer",
+    "description": "URL for the UTM source"
+  },
+  {
+    "table": "website_pageviews",
+    "field": "website_pageview_id",
+    "description": "Unique identifier for each website pageview (PK)"
+  },
+  {
+    "table": "website_pageviews",
+    "field": "created_at",
+    "description": "Timestamp for the pageview"
+  },
+  {
+    "table": "website_pageviews",
+    "field": "website_session_id",
+    "description": "Unique identifier for the website session the pageview belongs to (FK)"
+  },
+  {
+    "table": "website_pageviews",
+    "field": "pageview_url",
+    "description": "URL path for the pageview"
+  }
+]
