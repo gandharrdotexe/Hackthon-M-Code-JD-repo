@@ -1,5 +1,5 @@
 "use client";
-
+import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import {
   Send,
@@ -242,8 +242,32 @@ const thinkingSteps = {
   ],
 };
 
-// Mock response content for non-Gemini models
-const mockResponseContent = {
+// Response content - Each AI provides its own unique response
+const responseContent = {
+  gemini: {
+    content: `Quantum computing represents a paradigm shift in computational power, leveraging quantum mechanical phenomena to process information in fundamentally different ways than classical computers.
+
+**Core Principles:**
+
+Quantum computers use quantum bits (qubits) that can exist in multiple states simultaneously through superposition. Unlike classical bits that are either 0 or 1, qubits can be both, enabling parallel processing of vast amounts of information.
+
+**Key Quantum Phenomena:**
+
+1. **Superposition**: Qubits exist in multiple states until measured
+2. **Entanglement**: Qubits become correlated, sharing quantum states instantly
+3. **Interference**: Quantum states amplify correct answers while canceling wrong ones
+
+**Real-World Applications:**
+
+• **Drug Discovery**: Simulating molecular interactions at quantum level
+• **Cryptography**: Breaking current encryption while creating unbreakable codes
+• **Optimization**: Solving complex logistics and financial modeling problems
+• **Machine Learning**: Accelerating pattern recognition and data analysis
+
+**Current Limitations:**
+
+Quantum computers require extreme cooling (near absolute zero), are highly susceptible to environmental interference (decoherence), and currently excel only at specific problem types rather than general computing.`,
+  },
   grok: {
     content: `**Quantum Computing: The Next Frontier**
 
@@ -358,73 +382,6 @@ const generateRandomMetrics = (score) => {
   };
 };
 
-// Gemini API configuration
-const GEMINI_API_KEY = "AIzaSyCZLiwI5W0Tnt8SfgUpLlSgZdcF6Zk6vxo";
-const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`;
-
-// Function to fetch response from Gemini API
-const fetchGeminiResponse = async (query) => {
-  try {
-    const response = await fetch(GEMINI_API_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        contents: [
-          {
-            parts: [
-              {
-                text: query,
-              },
-            ],
-          },
-        ],
-        generationConfig: {
-          temperature: 0.7,
-          topK: 1,
-          topP: 0.8,
-          maxOutputTokens: 2048,
-        },
-        safetySettings: [
-          {
-            category: "HARM_CATEGORY_HARASSMENT",
-            threshold: "BLOCK_NONE",
-          },
-          {
-            category: "HARM_CATEGORY_HATE_SPEECH",
-            threshold: "BLOCK_NONE",
-          },
-          {
-            category: "HARM_CATEGORY_SEXUALLY_EXPLICIT",
-            threshold: "BLOCK_NONE",
-          },
-          {
-            category: "HARM_CATEGORY_DANGEROUS_CONTENT",
-            threshold: "BLOCK_NONE",
-          },
-        ],
-      }),
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(
-        `API Error: ${errorData.error?.message || response.statusText}`
-      );
-    }
-
-    const data = await response.json();
-    return (
-      data.candidates?.[0]?.content?.parts?.[0]?.text ||
-      "No response generated."
-    );
-  } catch (error) {
-    console.error("Gemini API Error:", error);
-    return `I encountered an error while generating a response: ${error.message}. This could be due to network issues or API limitations. Please try again or use a sample question.`;
-  }
-};
-
 const ChatPage = () => {
   const [activeChat, setActiveChat] = useState(null);
   const [input, setInput] = useState("");
@@ -477,7 +434,7 @@ const ChatPage = () => {
     }
   };
 
-  const simulateThinking = async (modelId, chatId, userQuery) => {
+  const simulateThinking = async (modelId, chatId) => {
     const steps = thinkingSteps[modelId];
     setAiStatus((prev) => ({ ...prev, [modelId]: "thinking" }));
 
@@ -511,27 +468,14 @@ const ChatPage = () => {
     }
 
     setAiStatus((prev) => ({ ...prev, [modelId]: "generating" }));
-
-    let responseContent = "";
-
-    if (modelId === "gemini") {
-      // Fetch real response from Gemini API
-      responseContent = await fetchGeminiResponse(userQuery);
-    } else {
-      // Use mock responses for other models
-      responseContent =
-        mockResponseContent[modelId]?.content ||
-        `Response from ${modelId}: ${userQuery}`;
-    }
-
-    await streamText(responseContent, modelId, chatId);
+    await streamText(responseContent[modelId].content, modelId, chatId);
 
     // Generate random score and metrics for this response
     const score = generateRandomScore();
     const metrics = generateRandomMetrics(score);
 
     return {
-      content: responseContent,
+      content: responseContent[modelId].content,
       score: score,
       metrics: metrics,
       status: "completed",
@@ -566,7 +510,7 @@ const ChatPage = () => {
 
     // Run all AI models in parallel
     const promises = aiModels.map((model) =>
-      simulateThinking(model.id, newChatId, query)
+      simulateThinking(model.id, newChatId)
     );
     const results = await Promise.all(promises);
 
@@ -715,16 +659,26 @@ const ChatPage = () => {
         <header className="backdrop-blur-xl bg-card/50 border-b border-border py-4 px-6 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary/20 to-secondary/20 border border-primary/30 flex items-center justify-center backdrop-blur-sm">
-                <Trophy className="w-5 h-5 text-primary" />
-              </div>
-              <div>
-                <h1 className="font-display text-xl font-bold text-foreground bg-gradient-to-r from-blue-500 via-red-500 to-emerald-500 bg-clip-text text-transparent animate-text-glow">
-                  AI Collective Arena
-                </h1>
-                <p className="text-xs text-muted-foreground">
+            <a href="#" className="flex items-center gap-3 group">
+            <div className="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center border border-primary/50 group-hover:shadow-neon transition-all">
+              <span className="font-display text-sm font-bold text-primary">AI</span>
+            </div>
+            <div className="flex flex-col">
+              <Link href="/">
+              <span className="font-display text-lg font-semibold text-foreground hidden sm:block">
+              AI Collective Arena
+            </span>
+              </Link>
+            
+            <p className="text-xs text-muted-foreground">
                   Compare top AI models with automatic scoring
                 </p>
+            </div>
+            
+          </a>
+              <div>
+                
+                
               </div>
             </div>
           </div>
@@ -1229,10 +1183,13 @@ const ChatPage = () => {
                 </div>
               ) : (
                 <div className="h-full flex flex-col items-center justify-center text-center p-8">
-                  <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-blue-500/20 to-emerald-500/20 border border-primary/30 flex items-center justify-center mb-6 backdrop-blur-sm shadow-xl">
-                    <Trophy className="w-12 h-12 text-primary" />
+                  <div className="mb-6">
+                    {/* <Trophy className="w-12 h-12 text-primary" /> */}
+                    <div className="w-[100px] h-[100px] rounded-lg bg-primary/20 flex items-center justify-center border border-primary/50 group-hover:shadow-neon transition-all">
+              <span className="font-display text-4xl font-bold text-primary">AI</span>
+            </div>
                   </div>
-                  <h3 className="text-2xl font-display font-medium text-foreground mb-3 bg-gradient-to-r from-blue-500 via-red-500 to-emerald-500 bg-clip-text text-transparent animate-text-glow">
+                  <h3 className="text-2xl font-display font-medium text-foreground mb-3 text-white animate-text-glow">
                     AI Collective Arena
                   </h3>
                   <p className="text-muted-foreground max-w-md mb-8 text-lg">
