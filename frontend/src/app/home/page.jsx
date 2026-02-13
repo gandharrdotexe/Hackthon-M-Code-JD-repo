@@ -102,9 +102,9 @@ export default function HomePage() {
               <h2 className="text-xl font-display font-bold text-gray-900">
                 Daily Ritual
               </h2>
-              <StreakBadge streak={streak || 0} animated={hasLoggedToday} />
             </div>
           </div>
+          <StreakBadge streak={streak || 0} animated={hasLoggedToday} />
         </div>
 
         {/* Progress Ring */}

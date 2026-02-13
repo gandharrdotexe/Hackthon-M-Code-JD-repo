@@ -23,8 +23,24 @@ router.post('/sugar', authRequired, async (req, res, next) => {
 // GET /logs/history
 router.get('/history', authRequired, async (req, res, next) => {
   try {
-    const limit = parseInt(req.query.limit, 10) || 20;
+    // Validate and sanitize limit parameter
+    let limit = parseInt(req.query.limit, 10) || 20;
+    if (isNaN(limit) || limit < 1) {
+      limit = 20;
+    }
+    if (limit > 100) {
+      limit = 100; // Cap at 100 for performance
+    }
+
     const logs = await getHistory(req.user._id, limit);
+    
+    // Disable caching for dynamic log data
+    res.set({
+      'Cache-Control': 'no-store, no-cache, must-revalidate, private',
+      'Pragma': 'no-cache',
+      'Expires': '0'
+    });
+    
     res.json(logs);
   } catch (err) {
     next(err);

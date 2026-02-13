@@ -95,11 +95,11 @@ export default function LogPage() {
   // Show result view
   if (result) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-teal-50 to-cream-100 p-6 pb-24">
+      <div className="min-h-screen bg-gradient-to-br from-teal-50 to-cream-100 py-10">
         {error && <ErrorBanner message={error} onDismiss={() => setError(null)} />}
         {success && <SuccessBanner message={success} onDismiss={() => setSuccess(null)} />}
 
-        <div className="max-w-md mx-auto space-y-6 animate-slide-up">
+        <div className="max-w-4xl mx-auto px-6 space-y-6 animate-slide-up">
           {/* XP & Reward Banner */}
           <div className="card-elevated bg-gradient-to-br from-teal-500 to-teal-400 text-white animate-scale-in">
             <div className="flex items-center justify-between">
@@ -197,10 +197,10 @@ export default function LogPage() {
 
   // Show form view
   return (
-    <div className="min-h-screen bg-gradient-to-br from-cream-100 to-cream-200 p-6 pb-24">
+    <div className="min-h-screen bg-gradient-to-br from-cream-50 to-cream-200 py-10">
       {error && <ErrorBanner message={error} onDismiss={() => setError(null)} />}
 
-      <div className="max-w-md mx-auto">
+      <div className="max-w-4xl mx-auto px-6">
         <div className="mb-8 animate-slide-up">
           <h1 className="text-3xl font-display font-bold text-gray-900 mb-2">
             Log Sugar Event

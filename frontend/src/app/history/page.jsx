@@ -26,7 +26,8 @@ export default function HistoryPage() {
 
     try {
       const data = await api.getHistory(20);
-      setLogs(data.logs || []);
+      // Backend returns logs array directly, not wrapped in an object
+      setLogs(Array.isArray(data) ? data : []);
     } catch (err) {
       setError(getErrorMessage(err));
     } finally {
@@ -65,8 +66,8 @@ export default function HistoryPage() {
 
   if (logs.length === 0) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-cream-100 to-cream-200 p-6 pb-24 flex items-center justify-center">
-        <div className="text-center max-w-md animate-slide-up">
+      <div className="min-h-screen bg-gradient-to-br from-cream-50 to-cream-200 flex items-center justify-center py-10">
+        <div className="text-center max-w-lg px-6 animate-slide-up">
           <div className="w-24 h-24 bg-cream-300 rounded-full flex items-center justify-center mx-auto mb-6">
             <Clock className="w-12 h-12 text-gray-400" />
           </div>
@@ -88,11 +89,11 @@ export default function HistoryPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-cream-100 to-cream-200 p-6 pb-24">
+    <div className="min-h-screen bg-gradient-to-br from-cream-50 to-cream-200 py-10">
       {error && <ErrorBanner message={error} onDismiss={() => setError(null)} />}
       {success && <SuccessBanner message={success} onDismiss={() => setSuccess(null)} />}
 
-      <div className="max-w-md mx-auto">
+      <div className="max-w-4xl mx-auto px-6">
         <div className="mb-8 animate-slide-up">
           <h1 className="text-3xl font-display font-bold text-gray-900 mb-2">
             History
@@ -102,7 +103,7 @@ export default function HistoryPage() {
           </p>
         </div>
 
-        <div className="space-y-4">
+        <div className="grid gap-4 md:grid-cols-2">
           {logs.map((log, index) => {
             const sugarType = SUGAR_TYPES[log.type] || SUGAR_TYPES.other;
             

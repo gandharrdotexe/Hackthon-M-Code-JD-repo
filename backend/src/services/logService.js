@@ -105,9 +105,19 @@ async function logSugarEvent(user, payload) {
 }
 
 async function getHistory(userId, limit = 20) {
-  const logs = await SugarLog.find({ userId })
+  if (!userId) {
+    throw new Error('User ID is required');
+  }
+
+  // Ensure limit is a valid positive number
+  const validLimit = Math.max(1, Math.min(100, parseInt(limit, 10) || 20));
+
+  // Ensure userId is properly formatted (Mongoose handles ObjectId conversion automatically)
+  const logs = await SugarLog.find({ userId: userId })
     .sort({ createdAt: -1 })
-    .limit(limit);
+    .limit(validLimit)
+    .lean(); // Use lean() for better performance when just reading data
+
   return logs;
 }
 
